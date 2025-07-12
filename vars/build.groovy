@@ -1,4 +1,10 @@
-def call(String ProjectName, String ImageTag, String DockerHubUser)
+def call(String ProjectName, String ImageTag, String DockerHubUser) 
 {
-  sh "docker build -H unix:///var/run/docker.sock -t ${DockerHubUser}/{ProjectName}:{ImageTag} . "
+    def imageFullName = "${DockerHubUser}/${ProjectName}:${ImageTag}"
+    echo "Building Docker image: ${imageFullName}"
+
+    withEnv(["DOCKER_HOST=unix:///var/run/docker.sock"]) 
+    {
+        sh "docker build -t ${imageFullName} ."
+    }
 }
